@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.view.main.feed;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -220,9 +221,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
     private class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedHolder> {
 
         private final List<Status> feed = new ArrayList<>();
-        private Status lastStatus;
-
-        private boolean hasMorePages;
         /**
          * Creates an instance and loads the first page of feed data.
          */
@@ -390,7 +388,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!presenter.isLoading() && feedRecyclerViewAdapter.hasMorePages) {
+            if (!presenter.isLoading() && presenter.hasMorePage()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
                     // Run this code later on the UI thread
