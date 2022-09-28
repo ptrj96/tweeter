@@ -3,11 +3,12 @@ package edu.byu.cs.tweeter.client.presenter;
 import android.widget.Toast;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.service.AccountService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class LoginPresenter implements UserService.LoginObserver {
+public class LoginPresenter implements AccountService.LoginObserver {
 
     private LoginView view;
     public LoginPresenter(LoginView view) {
@@ -20,7 +21,7 @@ public class LoginPresenter implements UserService.LoginObserver {
             view.clearInfoMessage();
             view.clearErrorMessage();
             view.displayInfoMessage("Logging In...");
-            new UserService().login(username, password, this);
+            new AccountService().login(username, password, this);
         }
         else {
             view.displayErrorMessage(errorMessage);
