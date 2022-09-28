@@ -15,8 +15,6 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class UserService {
-
-
     public interface GetUserObserver {
         void handleGetUserSuccess(User user);
         void handleGetUserFailed(String message);

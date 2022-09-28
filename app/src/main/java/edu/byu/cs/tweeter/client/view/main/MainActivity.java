@@ -40,15 +40,17 @@ import edu.byu.cs.tweeter.client.backgroundTask.LogoutTask;
 import edu.byu.cs.tweeter.client.backgroundTask.PostStatusTask;
 import edu.byu.cs.tweeter.client.backgroundTask.UnfollowTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.MainPresenter;
 import edu.byu.cs.tweeter.client.view.login.LoginActivity;
 import edu.byu.cs.tweeter.client.view.login.StatusDialogFragment;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements StatusDialogFragment.Observer {
+public class MainActivity extends AppCompatActivity implements StatusDialogFragment.Observer, MainPresenter.MainActivityView {
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     private TextView followeeCount;
     private TextView followerCount;
     private Button followButton;
+
+    private MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
         followButton = findViewById(R.id.followButton);
 
+        AuthToken token = Cache.getInstance().getCurrUserAuthToken();
+        presenter = new MainPresenter(selectedUser, token, this);
+
         if (selectedUser.compareTo(Cache.getInstance().getCurrUser()) == 0) {
             followButton.setVisibility(View.GONE);
         } else {
@@ -120,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: move this code
                 followButton.setEnabled(false);
 
                 if (followButton.getText().toString().equals(v.getContext().getString(R.string.following))) {
@@ -151,12 +159,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logoutMenu) {
-            logOutToast = Toast.makeText(this, "Logging Out...", Toast.LENGTH_LONG);
-            logOutToast.show();
-
-            LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler());
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(logoutTask);
+            presenter.logout();
 
             return true;
         } else {
@@ -164,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
+    @Override
+    public void displayMessage(String message) {
+        logOutToast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
+        logOutToast.show();
+    }
+    @Override
     public void logoutUser() {
         //Revert to login screen.
         Intent intent = new Intent(this, LoginActivity.class);
@@ -281,24 +290,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
-    // LogoutHandler
 
-    private class LogoutHandler extends Handler {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(LogoutTask.SUCCESS_KEY);
-            if (success) {
-                logOutToast.cancel();
-                logoutUser();
-            } else if (msg.getData().containsKey(LogoutTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(LogoutTask.MESSAGE_KEY);
-                Toast.makeText(MainActivity.this, "Failed to logout: " + message, Toast.LENGTH_LONG).show();
-            } else if (msg.getData().containsKey(LogoutTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(LogoutTask.EXCEPTION_KEY);
-                Toast.makeText(MainActivity.this, "Failed to logout because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     // GetFollowersCountHandler
 
