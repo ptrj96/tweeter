@@ -17,7 +17,7 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FeedService {
-    public interface FeedObserver{
+    public interface FeedObserver {
         void handleFeedSuccess(List<Status> statuses, boolean morePages);
         void handleFeedFailure(String message);
         void handleFeedThrewException(Exception ex);
