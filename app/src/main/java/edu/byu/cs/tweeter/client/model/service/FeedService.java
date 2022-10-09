@@ -9,9 +9,8 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
-import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.backgroundTask.LoginTask;
-import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFeedTask;
+import edu.byu.cs.tweeter.client.model.service.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -37,7 +36,7 @@ public class FeedService {
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
             if (success) {
-                List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY);
+                List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.MESSAGE_KEY);
                 boolean morePages = (boolean) msg.getData().getSerializable(GetFeedTask.MORE_PAGES_KEY);
                 observer.handleFeedSuccess(statuses, morePages);
             } else if (msg.getData().containsKey(GetFeedTask.MESSAGE_KEY)) {
