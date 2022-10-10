@@ -34,6 +34,7 @@ import java.util.List;
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.client.presenter.view.ScrollableView;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -42,7 +43,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Feed" tab.
  */
-public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
+public class FeedFragment extends Fragment implements ScrollableView<Status> {
     private static final String LOG_TAG = "FeedFragment";
     private static final String USER_KEY = "UserKey";
 
@@ -81,7 +82,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
         user = (User) getArguments().getSerializable(USER_KEY);
         AuthToken token = Cache.getInstance().getCurrUserAuthToken();
 
-        presenter = new FeedPresenter(user, token, this);
+        presenter = new FeedPresenter(this);
 
         RecyclerView feedRecyclerView = view.findViewById(R.id.feedRecyclerView);
 
@@ -93,7 +94,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
-        presenter.loadItems();
+        presenter.loadMoreItems(user);
 
         return view;
     }
@@ -105,25 +106,24 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
     }
 
     @Override
-    public void setLoading(boolean loading) {
-        feedRecyclerViewAdapter.setLoading(loading);
+    public void setLoadingStatus(boolean value) {
+        if (value) {
+            feedRecyclerViewAdapter.addLoadingFooter();
+        }
+        else {
+            feedRecyclerViewAdapter.removeLoadingFooter();
+        }
     }
 
     @Override
-    public void setStatuses(List<Status> statuses) {
-        feedRecyclerViewAdapter.addItems(statuses);
+    public void addItems(List<Status> items) {
+        feedRecyclerViewAdapter.addItems(items);
     }
 
     @Override
-    public void navigateToUser(User user) {
+    public void goToUser(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-        startActivity(intent);
-    }
-
-    @Override
-    public void navigateToUri(Uri uri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
@@ -156,7 +156,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
                 @Override
                 public void onClick(View view) {
                     String alias = userAlias.getText().toString();
-                    presenter.selectUser(alias);
+                    presenter.goToUser(alias);
                 }
             });
         }
@@ -187,7 +187,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
 
                         String clickable = s.subSequence(start, end).toString();
 
-                        presenter.selectUser(clickable);
+                        presenter.goToUser(clickable);
                     }
 
                     @Override
@@ -220,7 +220,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
          * Creates an instance and loads the first page of feed data.
          */
         FeedRecyclerViewAdapter() {
-            presenter.loadItems();
+            presenter.loadMoreItems(user);
         }
 
         /**
@@ -383,13 +383,13 @@ public class FeedFragment extends Fragment implements FeedPresenter.FeedView {
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!presenter.isLoading() && presenter.hasMorePage()) {
+            if (!presenter.isLoading() && presenter.morePages()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
                     // Run this code later on the UI thread
                     final Handler handler = new Handler(Looper.getMainLooper());
                     handler.postDelayed(() -> {
-                            presenter.loadItems();
+                            presenter.loadMoreItems(user);
                     }, 0);
                 }
             }
