@@ -25,13 +25,14 @@ import java.io.ByteArrayOutputStream;
 
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.presenter.RegisterPresenter;
+import edu.byu.cs.tweeter.client.presenter.view.AuthView;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * Implements the register screen.
  */
-public class RegisterFragment extends Fragment implements RegisterPresenter.RegisterView {
+public class RegisterFragment extends Fragment implements AuthView {
     private static final String LOG_TAG = "RegisterFragment";
     private static final int RESULT_IMAGE = 10;
 
@@ -114,6 +115,13 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.Regi
 
 
     @Override
+    public void authSuccessful(User user) {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
+        startActivity(intent);
+    }
+
+    @Override
     public void displayErrorMessage(String message) {
         errorView.setText(message);
     }
@@ -123,12 +131,6 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.Regi
         errorView.setText("");
     }
 
-    @Override
-    public void displayInfoMessage(String message) {
-        clearInfoMessage();
-        registeringToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
-        registeringToast.show();
-    }
 
     @Override
     public void clearInfoMessage() {
@@ -138,10 +140,11 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.Regi
         }
     }
 
+
     @Override
-    public void navigateToUser(User user) {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-        startActivity(intent);
+    public void displayMessage(String message) {
+        clearInfoMessage();
+        registeringToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
+        registeringToast.show();
     }
 }
