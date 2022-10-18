@@ -22,7 +22,7 @@ public class LoginPresenter extends AuthPresenter {
             view.clearErrorMessage();
             view.clearInfoMessage();
             view.displayMessage("Logging in...");
-            getAccountService().login(username, password, new LoginObserver());
+            accountService.login(username, password, new LoginObserver());
         }
         else {
             view.displayErrorMessage(errorMessage);

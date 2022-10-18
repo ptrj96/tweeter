@@ -8,26 +8,14 @@ import edu.byu.cs.tweeter.client.presenter.view.BaseView;
 
 public class Presenter {
 
-    private BaseView view;
-    private UserService userService;
-    private AccountService accountService;
+    protected BaseView view;
+    protected UserService userService;
+    protected AccountService accountService;
 
     public Presenter(BaseView view) {
         this.view = view;
         userService = new UserService();
         accountService = new AccountService();
-    }
-
-    public BaseView getView() {
-        return view;
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public AccountService getAccountService() {
-        return accountService;
     }
 
     public abstract class Observer implements ServiceObserver {

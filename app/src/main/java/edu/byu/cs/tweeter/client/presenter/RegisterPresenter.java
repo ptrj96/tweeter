@@ -18,7 +18,7 @@ public class RegisterPresenter extends AuthPresenter {
             view.clearInfoMessage();
             view.clearErrorMessage();
             view.displayMessage("Registering...");
-            getAccountService().register(firstName, lastName, alias, password, image, new RegisterObserver());
+            accountService.register(firstName, lastName, alias, password, image, new RegisterObserver());
         }
         else {
             view.displayErrorMessage(errorMessage);

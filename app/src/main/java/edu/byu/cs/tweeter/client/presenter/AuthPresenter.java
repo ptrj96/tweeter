@@ -13,7 +13,7 @@ public class AuthPresenter extends Presenter {
     }
 
     public AuthView getView() {
-        return (AuthView) super.getView();
+        return (AuthView) view;
     }
 
     protected String validateLogin(String alias, String password) {

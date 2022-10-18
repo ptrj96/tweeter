@@ -18,7 +18,7 @@ public abstract class ScrollablePresenter<T> extends Presenter {
         super(view);
     }
     public ScrollableView<T> getScrollableView() {
-        return (ScrollableView<T>) getView();
+        return (ScrollableView<T>) view;
     }
     public T getLastItem() {
         return lastItem;
@@ -42,7 +42,7 @@ public abstract class ScrollablePresenter<T> extends Presenter {
     }
     protected abstract void getItems(User user);
     public void goToUser(String userAlias) {
-        getUserService().getUser(Cache.getInstance().getCurrUserAuthToken(), userAlias, new GetUserObserver());
+        userService.getUser(Cache.getInstance().getCurrUserAuthToken(), userAlias, new GetUserObserver());
         getScrollableView().displayMessage("Getting user's profile...");
     }
 
