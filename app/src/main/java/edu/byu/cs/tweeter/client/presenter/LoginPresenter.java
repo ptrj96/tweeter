@@ -31,7 +31,7 @@ public class LoginPresenter extends AuthPresenter {
 
     public class LoginObserver extends AuthObserver {
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to login";
         }
     }

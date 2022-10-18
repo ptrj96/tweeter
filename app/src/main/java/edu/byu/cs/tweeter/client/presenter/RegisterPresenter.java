@@ -44,7 +44,7 @@ public class RegisterPresenter extends AuthPresenter {
 
     public class RegisterObserver extends AuthObserver {
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to register";
         }
     }

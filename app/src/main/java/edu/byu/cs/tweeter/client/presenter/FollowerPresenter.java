@@ -24,7 +24,7 @@ public class FollowerPresenter extends ScrollablePresenter<User> {
 
     public class GetFollowerObserver extends GetItemsObserver {
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to get followers";
         }
     }

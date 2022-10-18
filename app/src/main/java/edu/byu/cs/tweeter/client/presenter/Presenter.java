@@ -21,12 +21,12 @@ public class Presenter {
     public abstract class Observer implements ServiceObserver {
         @Override
         public void handleFailure(String message) {
-            view.displayMessage(getMessage() + ": " + message);
+            view.displayMessage(getBaseMessage() + ": " + message);
         }
         @Override
         public void handleException(Exception ex) {
-            view.displayMessage(getMessage() + " because of exception: " + ex.getMessage());
+            view.displayMessage(getBaseMessage() + " because of exception: " + ex.getMessage());
         }
-        protected abstract String getMessage();
+        protected abstract String getBaseMessage();
     }
 }

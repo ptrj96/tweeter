@@ -27,7 +27,7 @@ public class FeedPresenter extends ScrollablePresenter<Status> {
 
     public class FeedObserver extends GetItemsObserver {
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to get feed";
         }
     }

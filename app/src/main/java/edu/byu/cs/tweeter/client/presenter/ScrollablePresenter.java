@@ -77,7 +77,7 @@ public abstract class ScrollablePresenter<T> extends Presenter {
             getScrollableView().goToUser(user);
         }
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to get user's profile";
         }
     }

@@ -28,7 +28,7 @@ public class StoryPresenter extends ScrollablePresenter<Status> {
 
     public class StoryObserver extends GetItemsObserver {
         @Override
-        protected String getMessage() {
+        protected String getBaseMessage() {
             return "Failed to get story";
         }
     }
