@@ -78,18 +78,19 @@ public class FeedFragment extends Fragment implements ScrollableView<Status> {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
+
         //noinspection ConstantConditions
         user = (User) getArguments().getSerializable(USER_KEY);
         AuthToken token = Cache.getInstance().getCurrUserAuthToken();
 
         presenter = new FeedPresenter(this);
+        feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
 
         RecyclerView feedRecyclerView = view.findViewById(R.id.feedRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         feedRecyclerView.setLayoutManager(layoutManager);
 
-        feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
         feedRecyclerView.setAdapter(feedRecyclerViewAdapter);
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
@@ -221,7 +222,6 @@ public class FeedFragment extends Fragment implements ScrollableView<Status> {
          * Creates an instance and loads the first page of feed data.
          */
         FeedRecyclerViewAdapter() {
-            presenter.loadMoreItems(user);
         }
 
         /**
