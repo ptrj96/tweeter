@@ -43,7 +43,7 @@ public class ServerFacade {
      */
     public FollowingResponse getFollowees(FollowingRequest request)
             throws IOException, TweeterRemoteException {
-        return clientCommunicator.doPost("/followees", request, null, FollowingResponse.class);
+        return clientCommunicator.doPost("/getfollowing", request, null, FollowingResponse.class);
     }
 
     public SuccessResponse followUser(FollowUserRequest request) throws IOException, TweeterRemoteException {
