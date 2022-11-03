@@ -3,7 +3,12 @@ package edu.byu.cs.tweeter.server.service;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
+import edu.byu.cs.tweeter.model.net.request.LogoutRequest;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
+import edu.byu.cs.tweeter.model.net.request.UserRequest;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
+import edu.byu.cs.tweeter.model.net.response.UserResponse;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService {
@@ -21,6 +26,32 @@ public class UserService {
         return new LoginResponse(user, authToken);
     }
 
+    public LoginResponse register(RegisterRequest request) {
+        if(request.getUsername() == null){
+            throw new RuntimeException("[Bad Request] Missing a username");
+        }
+        else if(request.getPassword() == null) {
+            throw new RuntimeException("[Bad Request] Missing a password");
+        }
+        else if (request.getImage() == null) {
+            throw new RuntimeException("[Bad Request] Missing an image");
+        }
+        else if (request.getFirstName() == null) {
+            throw new RuntimeException("[Bad Request] Missing a first name");
+        }
+        else if (request.getLastName() == null) {
+            throw new RuntimeException("[Bad Request] Missing a last name");
+        }
+
+        User user = getDummyUser();
+        AuthToken authToken = getDummyAuthToken();
+        return new LoginResponse(user, authToken);
+    }
+
+    public SuccessResponse logout(LogoutRequest request) {
+        return new SuccessResponse(true);
+    }
+
     /**
      * Returns the dummy user to be returned by the login operation.
      * This is written as a separate method to allow mocking of the dummy user.
@@ -29,6 +60,10 @@ public class UserService {
      */
     User getDummyUser() {
         return getFakeData().getFirstUser();
+    }
+
+    public UserResponse getUser(UserRequest request) {
+        return new UserResponse(getFakeData().findUserByAlias(request.getUser().getAlias()));
     }
 
     /**

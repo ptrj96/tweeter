@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.FollowListRequest;
 
 /**
- * A paged response for a {@link FollowingRequest}.
+ * A paged response for a {@link FollowListRequest}.
  */
-public class FollowingResponse extends PagedResponse {
+public class FollowListResponse extends PagedResponse {
 
-    private List<User> followees;
+    private List<User> followList;
 
     /**
      * Creates a response indicating that the corresponding request was unsuccessful. Sets the
@@ -19,19 +19,19 @@ public class FollowingResponse extends PagedResponse {
      *
      * @param message a message describing why the request was unsuccessful.
      */
-    public FollowingResponse(String message) {
+    public FollowListResponse(String message) {
         super(false, message, false);
     }
 
     /**
      * Creates a response indicating that the corresponding request was successful.
      *
-     * @param followees the followees to be included in the result.
+     * @param followList the followees to be included in the result.
      * @param hasMorePages an indicator of whether more data is available for the request.
      */
-    public FollowingResponse(List<User> followees, boolean hasMorePages) {
+    public FollowListResponse(List<User> followList, boolean hasMorePages) {
         super(true, hasMorePages);
-        this.followees = followees;
+        this.followList = followList;
     }
 
     /**
@@ -39,8 +39,8 @@ public class FollowingResponse extends PagedResponse {
      *
      * @return the followees.
      */
-    public List<User> getFollowees() {
-        return followees;
+    public List<User> getFollowList() {
+        return followList;
     }
 
     @Override
@@ -53,15 +53,15 @@ public class FollowingResponse extends PagedResponse {
             return false;
         }
 
-        FollowingResponse that = (FollowingResponse) param;
+        FollowListResponse that = (FollowListResponse) param;
 
-        return (Objects.equals(followees, that.followees) &&
+        return (Objects.equals(followList, that.followList) &&
                 Objects.equals(this.getMessage(), that.getMessage()) &&
                 this.isSuccess() == that.isSuccess());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(followees);
+        return Objects.hash(followList);
     }
 }

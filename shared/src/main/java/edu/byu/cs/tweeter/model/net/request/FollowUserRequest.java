@@ -5,10 +5,20 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowUserRequest {
     private AuthToken authToken;
+    private User targetUser;
     private User followee;
 
-    public FollowUserRequest(AuthToken authToken, User followee) {
+    public User getTargetUser() {
+        return targetUser;
+    }
+
+    public void setTargetUser(User targetUser) {
+        this.targetUser = targetUser;
+    }
+
+    public FollowUserRequest(AuthToken authToken, User targetUser, User followee) {
         this.authToken = authToken;
+        this.targetUser = targetUser;
         this.followee = followee;
     }
 

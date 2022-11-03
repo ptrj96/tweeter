@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
 import edu.byu.cs.tweeter.model.net.request.FollowUserRequest;
-import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.request.FollowListRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.response.FollowListResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
 
@@ -41,9 +41,9 @@ public class ServerFacade {
      *                other information required to satisfy the request.
      * @return the followees.
      */
-    public FollowingResponse getFollowees(FollowingRequest request)
+    public FollowListResponse getFollowees(FollowListRequest request)
             throws IOException, TweeterRemoteException {
-        return clientCommunicator.doPost("/getfollowing", request, null, FollowingResponse.class);
+        return clientCommunicator.doPost("/getfollowing", request, null, FollowListResponse.class);
     }
 
     public SuccessResponse followUser(FollowUserRequest request) throws IOException, TweeterRemoteException {

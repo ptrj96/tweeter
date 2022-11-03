@@ -6,30 +6,30 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
  * Contains all the information needed to make a request to have the server return the next page of
  * followees for a specified follower.
  */
-public class FollowingRequest {
+public class FollowListRequest {
 
     private AuthToken authToken;
-    private String followerAlias;
+    private String targetUser;
     private int limit;
     private String lastFolloweeAlias;
 
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
      */
-    private FollowingRequest() {}
+    private FollowListRequest() {}
 
     /**
      * Creates an instance.
      *
-     * @param followerAlias the alias of the user whose followees are to be returned.
+     * @param targetUser the alias of the user whose followees are to be returned.
      * @param limit the maximum number of followees to return.
      * @param lastFolloweeAlias the alias of the last followee that was returned in the previous request (null if
      *                     there was no previous request or if no followees were returned in the
      *                     previous request).
      */
-    public FollowingRequest(AuthToken authToken, String followerAlias, int limit, String lastFolloweeAlias) {
+    public FollowListRequest(AuthToken authToken, String targetUser, int limit, String lastFolloweeAlias) {
         this.authToken = authToken;
-        this.followerAlias = followerAlias;
+        this.targetUser = targetUser;
         this.limit = limit;
         this.lastFolloweeAlias = lastFolloweeAlias;
     }
@@ -57,17 +57,17 @@ public class FollowingRequest {
      *
      * @return the follower.
      */
-    public String getFollowerAlias() {
-        return followerAlias;
+    public String getTargetUser() {
+        return targetUser;
     }
 
     /**
      * Sets the follower.
      *
-     * @param followerAlias the follower.
+     * @param targetUser the follower.
      */
-    public void setFollowerAlias(String followerAlias) {
-        this.followerAlias = followerAlias;
+    public void setTargetUser(String targetUser) {
+        this.targetUser = targetUser;
     }
 
     /**
