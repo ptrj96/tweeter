@@ -3,10 +3,12 @@ package edu.byu.cs.tweeter.client.model.net;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.net.request.FollowUserRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
 import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -42,5 +44,9 @@ public class ServerFacade {
     public FollowingResponse getFollowees(FollowingRequest request)
             throws IOException, TweeterRemoteException {
         return clientCommunicator.doPost("/followees", request, null, FollowingResponse.class);
+    }
+
+    public SuccessResponse followUser(FollowUserRequest request) throws IOException, TweeterRemoteException {
+        return clientCommunicator.doPost("/follow", request, null, SuccessResponse.class);
     }
 }
