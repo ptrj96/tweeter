@@ -21,27 +21,22 @@ public class LoginTask extends AuthenticateTask {
 
     @Override
     protected Pair<User, AuthToken> runAuthenticationTask() {
-//        try {
-//            LoginRequest request = new LoginRequest(username, password);
-//            ServerFacade facade = new ServerFacade();
-//            LoginResponse response = facade.login(request);
-//
-//            if (response.isSuccess()) {
-//                return new Pair<>(response.getUser(), response.getAuthToken());
-//            }
-//            else {
-//                sendFailedMessage(response.getMessage());
-//            }
-//        }
-//        catch (Exception ex) {
-//            sendExceptionMessage(ex);
-//        }
+        try {
+            LoginRequest request = new LoginRequest(username, password);
+            ServerFacade facade = new ServerFacade();
+            LoginResponse response = facade.login(request);
 
+            if (response.isSuccess()) {
+                return new Pair<>(response.getUser(), response.getAuthToken());
+            }
+            else {
+                sendFailedMessage(response.getMessage());
+            }
+        }
+        catch (Exception ex) {
+            sendExceptionMessage(ex);
+        }
 
-
-        User loggedInUser = getFakeData().getFirstUser();
-        AuthToken authToken = getFakeData().getAuthToken();
-        return new Pair<>(loggedInUser, authToken);
-//        return null;
+        return null;
     }
 }
