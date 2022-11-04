@@ -11,7 +11,7 @@ public class LoginRequest {
     /**
      * Allows construction of the object from Json. Private so it won't be called in normal code.
      */
-    private LoginRequest() {}
+    protected LoginRequest() {}
 
     /**
      * Creates an instance.

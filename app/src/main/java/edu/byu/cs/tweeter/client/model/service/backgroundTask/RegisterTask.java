@@ -56,9 +56,6 @@ public class RegisterTask extends AuthenticateTask {
             sendExceptionMessage(ex);
         }
 
-
-        User registeredUser = getFakeData().getFirstUser();
-        AuthToken authToken = getFakeData().getAuthToken();
-        return new Pair<>(registeredUser, authToken);
+        return null;
     }
 }

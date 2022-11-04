@@ -5,6 +5,10 @@ public class RegisterRequest extends LoginRequest {
     String lastName;
     String image;
 
+    public RegisterRequest() {
+        super();
+    }
+
     public String getFirstName() {
         return firstName;
     }
