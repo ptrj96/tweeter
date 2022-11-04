@@ -32,4 +32,12 @@ public class StatusListResponse extends PagedResponse {
                 Objects.equals(this.getMessage(), that.getMessage()) &&
                 this.isSuccess() == that.isSuccess());
     }
+
+    public List<Status> getFeed() {
+        return feed;
+    }
+
+    public void setFeed(List<Status> feed) {
+        this.feed = feed;
+    }
 }

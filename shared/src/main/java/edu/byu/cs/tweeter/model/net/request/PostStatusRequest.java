@@ -9,6 +9,9 @@ public class PostStatusRequest {
     private User curUser;
     private Status status;
 
+    public PostStatusRequest() {
+    }
+
     public AuthToken getAuthToken() {
         return authToken;
     }

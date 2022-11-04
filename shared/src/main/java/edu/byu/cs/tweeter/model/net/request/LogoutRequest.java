@@ -9,6 +9,9 @@ public class LogoutRequest {
         this.authToken = authToken;
     }
 
+    public LogoutRequest() {
+    }
+
     public AuthToken getAuthToken() {
         return authToken;
     }

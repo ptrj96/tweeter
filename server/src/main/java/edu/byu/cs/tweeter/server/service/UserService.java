@@ -63,7 +63,7 @@ public class UserService {
     }
 
     public UserResponse getUser(UserRequest request) {
-        return new UserResponse(getFakeData().findUserByAlias(request.getUser().getAlias()));
+        return new UserResponse(getFakeData().findUserByAlias(request.getUser()));
     }
 
     /**
