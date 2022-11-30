@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.net.request.StatusListRequest;
 import edu.byu.cs.tweeter.model.net.response.StatusListResponse;
+import edu.byu.cs.tweeter.server.dao.DAOFactory;
 import edu.byu.cs.tweeter.server.dao.FeedDAO;
 
 public class FeedService {
@@ -17,6 +18,6 @@ public class FeedService {
     }
 
     FeedDAO getFeedDAO() {
-        return new FeedDAO();
+        return (FeedDAO) new DAOFactory().create("FeedDAO");
     }
 }
