@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.server.service;
 
 import edu.byu.cs.tweeter.model.net.request.StatusListRequest;
 import edu.byu.cs.tweeter.model.net.response.StatusListResponse;
+import edu.byu.cs.tweeter.server.dao.DAOFactory;
 import edu.byu.cs.tweeter.server.dao.StoryDAO;
 
 public class StoryService {
@@ -17,6 +18,6 @@ public class StoryService {
     }
 
     StoryDAO getStoryDAO() {
-        return new StoryDAO();
+        return (StoryDAO) new DAOFactory().create("StoryDAO");
     }
 }

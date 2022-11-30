@@ -15,4 +15,8 @@ public class FollowCountResponse extends Response {
         super(true, null);
         this.count = count;
     }
+
+    public FollowCountResponse(String message) {
+        super(false, message);
+    }
 }

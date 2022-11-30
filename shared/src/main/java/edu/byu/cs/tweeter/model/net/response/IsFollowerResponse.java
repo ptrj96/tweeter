@@ -15,4 +15,8 @@ public class IsFollowerResponse extends  Response {
         super(true, null);
         this.isFollower = isFollower;
     }
+
+    public IsFollowerResponse(String message) {
+        super(false, message);
+    }
 }
