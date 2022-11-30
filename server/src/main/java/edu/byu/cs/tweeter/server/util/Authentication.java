@@ -28,6 +28,13 @@ public class Authentication {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        return tokenDateTime < new Date().getTime();
+        if (tokenDateTime < new Date().getTime()) {
+            DAOFactory daoFactory = new DAOFactory();
+            AuthTokenDAO authTokenDAO = (AuthTokenDAO) daoFactory.create("AuthTokenDAO");
+
+            authTokenDAO.updateAuthToken(token.getToken());
+            return true;
+        }
+        return false;
     }
 }

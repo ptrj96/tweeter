@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import edu.byu.cs.tweeter.model.domain.Follower;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.StatusListRequest;
@@ -25,11 +26,11 @@ public class FeedDAO implements IFeedDAO {
     private final DynamoDB dynamoDB = new DynamoDB(client);
     private Table feedTable = dynamoDB.getTable("340_tweeter_feed");
     @Override
-    public void addFeed(Status status, User user) {
+    public void addFeed(Status status, Follower follower) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         try {
             Date datetime = dateFormat.parse(status.getDate());
-            feedTable.putItem(new Item().withPrimaryKey("alias", user.getAlias(), "dt", datetime.getTime())
+            feedTable.putItem(new Item().withPrimaryKey("alias", follower.getAlias(), "dt", datetime.getTime())
                     .withString("status", status.getPost())
                     .withList("urls", status.getUrls())
                     .withList("mentions", status.getMentions()));
