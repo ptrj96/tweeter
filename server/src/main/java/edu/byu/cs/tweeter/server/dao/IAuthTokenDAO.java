@@ -6,4 +6,5 @@ public interface IAuthTokenDAO extends IDAO {
     void createAuthToken(AuthToken token);
     AuthToken getAuthToken(String token);
     void updateAuthToken(String token);
+    void deleteAuthToken(String token);
 }

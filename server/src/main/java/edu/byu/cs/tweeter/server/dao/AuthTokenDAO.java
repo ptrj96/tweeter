@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
@@ -45,5 +46,11 @@ public class AuthTokenDAO implements  IAuthTokenDAO {
                 .withUpdateExpression("set dt = :val")
                 .withValueMap(new ValueMap().withNumber(":val", new Date().getTime() + 300000));
         authTokenTable.updateItem(spec);
+    }
+
+    @Override
+    public void deleteAuthToken(String token) {
+        DeleteItemSpec spec = new DeleteItemSpec().withPrimaryKey("token", token);
+        authTokenTable.deleteItem(spec);
     }
 }

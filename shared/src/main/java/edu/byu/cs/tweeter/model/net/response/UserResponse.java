@@ -17,4 +17,8 @@ public class UserResponse extends Response {
         super(true, null);
         this.user = user;
     }
+
+    public UserResponse(String message) {
+        super(false, message);
+    }
 }

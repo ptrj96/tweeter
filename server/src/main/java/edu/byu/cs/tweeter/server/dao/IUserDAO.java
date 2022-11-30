@@ -1,9 +1,10 @@
 package edu.byu.cs.tweeter.server.dao;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 
 public interface IUserDAO extends IDAO {
-    void createUser(User user, String password);
+    void createUser(RegisterRequest request);
     User getUser(String alias);
     User login(String alias, String password);
     void addFollowerCount(String alias);

@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.net.request.RegisterRequest;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,12 +25,12 @@ public class UserDAO implements IUserDAO{
     private Table userTable = dynamoDB.getTable("340_tweeter_user");
 
     @Override
-    public void createUser(User user, String password) {
-        String hashedPassword = hashPassword(password);
-        Item item = new Item().withPrimaryKey("alias", user.getAlias())
-                .withString("first_name", user.getFirstName())
-                .withString("last_name", user.getLastName())
-                .withString("image_url", user.getImageUrl())
+    public void createUser(RegisterRequest request) {
+        String hashedPassword = hashPassword(request.getPassword());
+        Item item = new Item().withPrimaryKey("alias", request.getUsername())
+                .withString("first_name", request.getFirstName())
+                .withString("last_name", request.getLastName())
+                .withString("image_url", request.getImage())
                 .withString("password", hashedPassword)
                 .withNumber("follower_count", 0)
                 .withNumber("followee_count", 0);
