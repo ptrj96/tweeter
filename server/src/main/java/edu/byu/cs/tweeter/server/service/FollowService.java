@@ -8,6 +8,7 @@ import edu.byu.cs.tweeter.model.net.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowListResponse;
 import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
 import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
+import edu.byu.cs.tweeter.server.dao.DAOFactory;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
 import edu.byu.cs.tweeter.server.dao.UserDAO;
 
@@ -96,9 +97,9 @@ public class FollowService {
      * @return the instance.
      */
     FollowDAO getFollowingDAO() {
-        return new FollowDAO();
+        return (FollowDAO) new DAOFactory().create("FollowDAO");
     }
     UserDAO getUserDAO() {
-        return new UserDAO();
+        return (UserDAO) new DAOFactory().create("UserDAO");
     }
 }
