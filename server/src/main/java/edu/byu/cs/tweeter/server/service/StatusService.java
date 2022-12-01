@@ -1,8 +1,7 @@
 package edu.byu.cs.tweeter.server.service;
 
-import edu.byu.cs.tweeter.model.domain.Follower;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.PostStatusRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowCountResponse;
 import edu.byu.cs.tweeter.model.net.response.FollowListResponse;
 import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
 import edu.byu.cs.tweeter.server.dao.DAOFactory;
@@ -27,7 +26,7 @@ public class StatusService {
         FollowDAO followDAO = (FollowDAO) daoFactory.create("FollowDAO");
 
         storyDAO.addStory(request.getStatus());
-        List<Follower> followerList = new ArrayList<>();
+        List<User> followerList = new ArrayList<>();
         FollowListResponse response = followDAO.getFollowers(request.getCurUser().getAlias(), null);
         followerList.addAll(response.getFollowList());
 
@@ -37,7 +36,7 @@ public class StatusService {
             followerList.addAll(response.getFollowList());
         }
 
-        for (Follower follower : followerList) {
+        for (User follower : followerList) {
             feedDAO.addFeed(request.getStatus(), follower);
         }
 

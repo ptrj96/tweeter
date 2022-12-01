@@ -28,7 +28,8 @@ public class Authentication {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        if (tokenDateTime < new Date().getTime()) {
+        long now = new Date().getTime();
+        if (tokenDateTime > now) {
             DAOFactory daoFactory = new DAOFactory();
             AuthTokenDAO authTokenDAO = (AuthTokenDAO) daoFactory.create("AuthTokenDAO");
 

@@ -37,7 +37,7 @@ public class FollowService {
         if (!isAuthenticated) {
             return new FollowListResponse("not authenticated");
         }
-        return getFollowingDAO().getFollowees(request.getAuthToken().getAlias(), request.getTargetUser());
+        return getFollowingDAO().getFollowees(request.getTargetUser(), request.getLastFolloweeAlias());
     }
 
     public FollowListResponse getFollowers(FollowListRequest request) {
@@ -50,7 +50,7 @@ public class FollowService {
         if (!isAuthenticated) {
             return new FollowListResponse("not authenticated");
         }
-        return getFollowingDAO().getFollowers(request.getAuthToken().getAlias(), request.getTargetUser());
+        return getFollowingDAO().getFollowers(request.getTargetUser(), request.getLastFolloweeAlias());
     }
 
     public SuccessResponse followUser(FollowUserRequest request) {
@@ -61,7 +61,11 @@ public class FollowService {
         if (!isAuthenticated) {
             return new SuccessResponse(false, "not authenticated");
         }
-        getFollowingDAO().followUser(request.getFollowee(), request.getTargetUser());
+        if (!getFollowingDAO().isFollower(request.getTargetUser(), request.getFollowee())) {
+            getUserDAO().addFolloweeCount(request.getTargetUser().getAlias());
+            getUserDAO().addFollowerCount(request.getFollowee().getAlias());
+            getFollowingDAO().followUser(request.getTargetUser(), request.getFollowee());
+        }
         return new SuccessResponse(true);
     }
 
@@ -73,7 +77,11 @@ public class FollowService {
         if (!isAuthenticated) {
             return new SuccessResponse(false, "not authenticated");
         }
-        getFollowingDAO().followUser(request.getFollowee(), request.getTargetUser());
+        if (getFollowingDAO().isFollower(request.getTargetUser(), request.getFollowee())) {
+            getUserDAO().subtractFolloweeCount(request.getTargetUser().getAlias());
+            getUserDAO().subtractFollowerCount(request.getFollowee().getAlias());
+            getFollowingDAO().unfollowUser(request.getTargetUser(), request.getFollowee());
+        }
         return new SuccessResponse(true);
     }
 
@@ -112,7 +120,7 @@ public class FollowService {
         if (!isAuthenticated) {
             return new IsFollowerResponse("not authenticated");
         }
-        boolean isFollow = new Random().nextBoolean();
+        boolean isFollow = getFollowingDAO().isFollower(request.getTargetUser(), request.getUser());
         return new IsFollowerResponse(isFollow);
     }
 

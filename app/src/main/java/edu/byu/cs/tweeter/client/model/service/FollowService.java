@@ -173,7 +173,7 @@ public class FollowService extends Service {
         void handleIsFollowerThrewException(Exception ex);
     }
     public void isFollower(AuthToken token, User user, User targetUser, IsFollowerObserver observer) {
-        IsFollowerTask isFollowerTask = new IsFollowerTask(token, user, targetUser, new IsFollowerHandler(observer));
+        IsFollowerTask isFollowerTask = new IsFollowerTask(token, targetUser, user, new IsFollowerHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(isFollowerTask);
     }

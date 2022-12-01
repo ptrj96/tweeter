@@ -5,6 +5,9 @@ public class DAOFactory {
         if ("AuthTokenDAO".equalsIgnoreCase(daoType)) {
             return new AuthTokenDAO();
         }
+        else if ("FeedDAO".equalsIgnoreCase(daoType)) {
+            return new FeedDAO();
+        }
         else if ("FollowDAO".equalsIgnoreCase(daoType)) {
             return new FollowDAO();
         }

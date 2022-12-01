@@ -1,5 +1,13 @@
 package edu.byu.cs.tweeter.server.service;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.net.request.LoginRequest;
@@ -15,6 +23,9 @@ import edu.byu.cs.tweeter.server.dao.UserDAO;
 import edu.byu.cs.tweeter.server.util.Authentication;
 import edu.byu.cs.tweeter.util.FakeData;
 
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -33,6 +44,7 @@ public class UserService {
             return new LoginResponse("failed to login");
         }
         AuthToken authToken = new AuthToken(UUID.randomUUID().toString());
+        authToken.setAlias(request.getUsername());
         AuthTokenDAO authTokenDAO = (AuthTokenDAO) daoFactory.create("AuthTokenDAO");
         authTokenDAO.createAuthToken(authToken);
         return new LoginResponse(user, authToken);
@@ -55,10 +67,21 @@ public class UserService {
             throw new RuntimeException("[Bad Request] Missing a last name");
         }
 
+        byte[] imageBytes = Base64.getDecoder().decode(request.getImage());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(imageBytes);
+        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType("image/png");
+        metadata.setContentLength(imageBytes.length);
+        PutObjectRequest putObjectRequest = new PutObjectRequest("pj-340-tweeter-images", request.getUsername()+".png", byteArrayInputStream, metadata);
+        s3.putObject(putObjectRequest);
+        String imageUrl = s3.getUrl("pj-340-tweeter-images", request.getUsername()+".png").toString();
+
         UserDAO userDAO = (UserDAO) daoFactory.create("UserDAO");
-        userDAO.createUser(request);
+        userDAO.createUser(request, imageUrl);
         User user = userDAO.getUser(request.getUsername());
         AuthToken authToken = new AuthToken(UUID.randomUUID().toString());
+        authToken.setAlias(user.getAlias());
         AuthTokenDAO authTokenDAO = (AuthTokenDAO) daoFactory.create("AuthTokenDAO");
         authTokenDAO.createAuthToken(authToken);
         return new LoginResponse(user, authToken);

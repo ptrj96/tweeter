@@ -37,14 +37,16 @@ public class AuthTokenDAO implements  IAuthTokenDAO {
         GetItemSpec spec = new GetItemSpec().withPrimaryKey("token", token);
         Item item = authTokenTable.getItem(spec);
         String datetime = dateFormat.format(item.getLong("dt"));
-        return new AuthToken(item.getString("alias"), datetime);
+        AuthToken authToken = new AuthToken(item.getString("token"), datetime);
+        authToken.setAlias(item.getString("alias"));
+        return authToken;
     }
 
     @Override
     public void updateAuthToken(String token) {
         UpdateItemSpec spec = new UpdateItemSpec().withPrimaryKey("token", token)
-                .withUpdateExpression("set dt = :val")
-                .withValueMap(new ValueMap().withNumber(":val", new Date().getTime() + 300000));
+                .withUpdateExpression("set dt = :dt")
+                .withValueMap(new ValueMap().withNumber(":dt", new Date().getTime() + 300000));
         authTokenTable.updateItem(spec);
     }
 

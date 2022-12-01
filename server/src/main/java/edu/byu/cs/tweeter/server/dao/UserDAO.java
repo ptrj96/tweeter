@@ -25,12 +25,12 @@ public class UserDAO implements IUserDAO{
     private Table userTable = dynamoDB.getTable("340_tweeter_user");
 
     @Override
-    public void createUser(RegisterRequest request) {
+    public void createUser(RegisterRequest request, String imageUrl) {
         String hashedPassword = hashPassword(request.getPassword());
         Item item = new Item().withPrimaryKey("alias", request.getUsername())
                 .withString("first_name", request.getFirstName())
                 .withString("last_name", request.getLastName())
-                .withString("image_url", request.getImage())
+                .withString("image_url", imageUrl)
                 .withString("password", hashedPassword)
                 .withNumber("follower_count", 0)
                 .withNumber("followee_count", 0);
