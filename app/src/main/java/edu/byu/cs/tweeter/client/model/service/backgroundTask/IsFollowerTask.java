@@ -40,7 +40,7 @@ public class IsFollowerTask extends AuthenticatedTask {
     protected void runTask() {
         try {
             ServerFacade facade = new ServerFacade();
-            IsFollowerRequest request = new IsFollowerRequest(getAuthToken(), follower, followee);
+            IsFollowerRequest request = new IsFollowerRequest(getAuthToken(), followee, follower);
             IsFollowerResponse response = facade.isFollower(request);
 
             if (response.isSuccess()) {

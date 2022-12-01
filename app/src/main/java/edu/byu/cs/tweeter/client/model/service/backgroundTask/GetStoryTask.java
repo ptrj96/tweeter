@@ -26,7 +26,7 @@ public class GetStoryTask extends PagedStatusTask {
     protected Pair<List<Status>, Boolean> getItems() {
         try {
             ServerFacade facade = new ServerFacade();
-            String targetUserAlias = getTargetUser() == null ? null : getTargetUser().toString();
+            String targetUserAlias = getTargetUser() == null ? null : getTargetUser().getAlias();
             Status lastStatus = getLastItem() == null ? null : getLastItem();
             StatusListRequest request = new StatusListRequest(getAuthToken(), targetUserAlias, getLimit(), lastStatus);
             StatusListResponse response = facade.getStory(request);

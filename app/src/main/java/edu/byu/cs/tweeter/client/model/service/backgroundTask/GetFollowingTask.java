@@ -25,8 +25,8 @@ public class GetFollowingTask extends PagedUserTask {
     protected Pair<List<User>, Boolean> getItems() {
         try {
             ServerFacade facade = new ServerFacade();
-            String targetUserAlias = getTargetUser() == null ? null : getTargetUser().toString();
-            String lastFolloweeAlias = getLastItem() == null ? null : getLastItem().toString();
+            String targetUserAlias = getTargetUser() == null ? null : getTargetUser().getAlias();
+            String lastFolloweeAlias = getLastItem() == null ? null : getLastItem().getAlias();
 
             FollowListRequest request = new FollowListRequest(getAuthToken(), targetUserAlias, getLimit(), lastFolloweeAlias);
             FollowListResponse response = facade.getFollowees(request);

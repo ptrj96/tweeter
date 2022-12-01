@@ -4,11 +4,11 @@ import edu.byu.cs.tweeter.model.net.request.FollowUserRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowCountRequest;
 import edu.byu.cs.tweeter.model.net.request.FollowListRequest;
 import edu.byu.cs.tweeter.model.net.request.IsFollowerRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowCountResponse;
-import edu.byu.cs.tweeter.model.net.response.FollowListResponse;
-import edu.byu.cs.tweeter.model.net.response.IsFollowerResponse;
-import edu.byu.cs.tweeter.model.net.response.SuccessResponse;
+import edu.byu.cs.tweeter.model.net.response.*;
+import edu.byu.cs.tweeter.server.dao.DAOFactory;
 import edu.byu.cs.tweeter.server.dao.FollowDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
+import edu.byu.cs.tweeter.server.util.Authentication;
 
 import java.util.Random;
 
@@ -32,7 +32,12 @@ public class FollowService {
         } else if(request.getLimit() <= 0) {
             throw new RuntimeException("[Bad Request] Request needs to have a positive limit");
         }
-        return getFollowingDAO().getFollowees(request);
+
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new FollowListResponse("not authenticated");
+        }
+        return getFollowingDAO().getFollowees(request.getTargetUser(), request.getLastFolloweeAlias());
     }
 
     public FollowListResponse getFollowers(FollowListRequest request) {
@@ -41,28 +46,54 @@ public class FollowService {
         } else if(request.getLimit() <= 0) {
             throw new RuntimeException("[Bad Request] Request needs to have a positive limit");
         }
-        return getFollowingDAO().getFollowers(request);
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new FollowListResponse("not authenticated");
+        }
+        return getFollowingDAO().getFollowers(request.getTargetUser(), request.getLastFolloweeAlias());
     }
 
     public SuccessResponse followUser(FollowUserRequest request) {
         if (request.getFollowee() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a followee");
         }
-        return getFollowingDAO().followUser(request);
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new SuccessResponse(false, "not authenticated");
+        }
+        if (!getFollowingDAO().isFollower(request.getTargetUser(), request.getFollowee())) {
+            getUserDAO().addFolloweeCount(request.getTargetUser().getAlias());
+            getUserDAO().addFollowerCount(request.getFollowee().getAlias());
+            getFollowingDAO().followUser(request.getTargetUser(), request.getFollowee());
+        }
+        return new SuccessResponse(true);
     }
 
     public SuccessResponse unfollowUser(FollowUserRequest request) {
         if (request.getFollowee() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a followee");
         }
-        return getFollowingDAO().followUser(request);
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new SuccessResponse(false, "not authenticated");
+        }
+        if (getFollowingDAO().isFollower(request.getTargetUser(), request.getFollowee())) {
+            getUserDAO().subtractFolloweeCount(request.getTargetUser().getAlias());
+            getUserDAO().subtractFollowerCount(request.getFollowee().getAlias());
+            getFollowingDAO().unfollowUser(request.getTargetUser(), request.getFollowee());
+        }
+        return new SuccessResponse(true);
     }
 
     public FollowCountResponse getFollowerCount(FollowCountRequest request) {
         if (request.getTargetUser() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a targetUser");
         }
-        int count = getFollowingDAO().getFollowerCount(request.getTargetUser());
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new FollowCountResponse("not authenticated");
+        }
+        int count = getUserDAO().getFollowerCount(request.getTargetUser().getAlias());
         return new FollowCountResponse(count);
     }
 
@@ -70,7 +101,11 @@ public class FollowService {
         if (request.getTargetUser() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a targetUser");
         }
-        int count = getFollowingDAO().getFolloweeCount(request.getTargetUser());
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getAuthToken());
+        if (!isAuthenticated) {
+            return new FollowCountResponse("not authenticated");
+        }
+        int count = getUserDAO().getFolloweeCount(request.getTargetUser().getAlias());
         return new FollowCountResponse(count);
     }
 
@@ -81,7 +116,11 @@ public class FollowService {
         else if (request.getUser() == null) {
             throw new RuntimeException("[Bad Request] Request needs to have a User");
         }
-        boolean isFollow = new Random().nextBoolean();
+        boolean isAuthenticated = Authentication.isAuthenticated(request.getToken());
+        if (!isAuthenticated) {
+            return new IsFollowerResponse("not authenticated");
+        }
+        boolean isFollow = getFollowingDAO().isFollower(request.getTargetUser(), request.getUser());
         return new IsFollowerResponse(isFollow);
     }
 
@@ -93,6 +132,9 @@ public class FollowService {
      * @return the instance.
      */
     FollowDAO getFollowingDAO() {
-        return new FollowDAO();
+        return (FollowDAO) new DAOFactory().create("FollowDAO");
+    }
+    UserDAO getUserDAO() {
+        return (UserDAO) new DAOFactory().create("UserDAO");
     }
 }

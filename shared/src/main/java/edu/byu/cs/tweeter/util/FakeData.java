@@ -213,7 +213,7 @@ public class FakeData {
         if (lastStatus != null) {
             for (int i = 0; i < fakeStatuses.size(); ++i) {
                 Status curStatus = fakeStatuses.get(i);
-                if (curStatus.getUser().getAlias().equals(lastStatus.getUser().getAlias()) &&
+                if (curStatus.getUser().equals(lastStatus.getUser()) &&
                         curStatus.getDate().equals(lastStatus.getDate())) {
                     index = i + 1;
                     break;
